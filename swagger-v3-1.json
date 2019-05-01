@@ -1,10 +1,9 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "v3",
         "title": "Bittrex API",
         "x-logo": {
-            "url": "https://raw.githubusercontent.com/Bittrex/bittrex.github.io/master/assets/img/bittrex-logo-mark.svg",
+            "url": "https://21vhlk4eov752iobnb2tvbpj-wpengine.netdna-ssl.com/wp-content/uploads/2019/02/Bittrex-Logotype.png",
             "backgroundColor": "#FFFFFF",
             "altText": "Bittrex logo"
           },

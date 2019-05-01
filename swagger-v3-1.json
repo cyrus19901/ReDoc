@@ -1,0 +1,1615 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v3",
+        "title": "Bittrex API",
+        "description": "# Pre-Release Warning:\n **Warning**: The v3-Beta or other pre-release API versions are not for production use.\n\n The v3-Beta release will be subject to breaking changes, potentially without notice, until the final API is released. Pre-release APIs should only be used for testing and review.\n\nThe v3-Beta API will operate against production (live-site) data and accounts and we recommend using test accounts and small-value transactions to validate your implementation.\n\nBy using the v3-Beta API you understand and agree that issues may be encountered without warning, affecting your use of the website and API. Bittrex provides no warranties, either express or implied, as to the suitability or usability of pre-release APIs. Bittrex will not be liable for any loss, whether such loss is direct, indirect, special or consequential, suffered by any party as a result of their use of the v3-Beta API or other pre-release APIs.\n\n # Getting Started\n Keep the following in mind when developing against the Bittrex API: \n - Enable 2FA on your account. API Keys cannot be generated unless 2FA is enabled and extended verification is done on the account.\n - All REST requests must be sent to `https://api.bittrex.com/v3` using the `application/json` content type. Non-HTTPS requests will be redirected to HTTPS, possibly causing functional or performance issues with your application.\n\n# Best Practices \n ### Call Limits\n The Bittrex API employs call limits on all endpoints to ensure the efficiency and availability of the platform for all customers. In general, API users are permitted to make a maximum of 60 API calls per minute. Calls after the limit will fail, with the limit resetting at the start of the next minute.\n\n __Note: Corporate and high-volume accounts may contact customer support for additional information to ensure that they may continue operating at an optimal level.\n\n# Pagination \n ### Overview\n Several Bittrex API resources support bulk fetches via 'list' API methods. For example, you can list deposits, list closed orders, and list withdrawals. These list API methods share a common structure, using at least these three parameters: `pageSize, nextPageToken and previousPageToken.` These parameters, if necessary are specified as query parameters on the HTTP request.\n\n ### Arguments:\n\n\n\n - __pageSize(optional)__: A limit on the number of objects to be returned between 1 and 200, defaults to 100\n - __nextPageToken(optional)__: It is a cursor for for using pagination and acts is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects ending with objFoo, your subsequent call can include `nextPageToken=objFoo` in order to fetch the next page of the list. Typically used for paginating in the forward direction.\n\n - __previousPageToken(optional)__: It is a cursor for for using pagination and acts is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects starting with objBar, your subsequent call can include `previousPageToken=objBar` in order to fetch the previous page of the list. Typically used for paginating in the reverse direction.\n\n\n ### Examples:\n\nList withdrawals, in reverse chronological order, up to maximum of 20 withdrawals, starting at the most recent withdrawal created:\n\n`https://api.bittrex.com/v3/withdrawals?pageSize=20`\n\nList withdrawals, in reverse chronological order, up to maximum of 10 withdrawals, starting after the withdrawal with ID of `940af3c3-665d-4432-a12e-cdf8fd99ab3b`\n\n`https://api.bittrex.com/v3/withdrawals?pageSize=10&nextPageToken=940af3c3-665d-4432-a12e-cdf8fd99ab3b`\n\n List withdrawals, in reverse chronological order, up to a maximum of 10 withdrawals, ending before the withdrawal with ID of `0d990dd2-4103-4d57-8e80-047e886537db`: \n\n`https://api.bittrex.com/v3/withdrawals?pageSize=10&previousPageToken=0d990dd2-4103-4d57-8e80-047e886537db`\n\n"
+    },
+    "tags": [
+        {
+            "name": "Rest v1 API",
+            "description": "an API to subscribe to different URLs for different events (as opposed to issuing RPCs)"
+        },
+        {
+            "name": "Rest v3 API",
+            "description": "an API to subscribe to different URLs for different events (as opposed to issuing RPCs)"
+        },
+        {
+            "name": "Bittrex SDK",
+            "description": "Various set of client libraries supported by Bittrex"
+        }
+    ],
+    "servers": [
+        {
+            "url": "https://api.bittrex.com/api/v1",
+            "description": "API Server for v1"
+        },
+        {
+            "url": "https://api.bittrex.com/api/v3",
+            "description": "API Server for v3"
+        }
+    ],
+    "host": "api.bittrex.com",
+    "basePath": "/v3",
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/Getaccount": {
+            "get": {
+                "tags": [
+                    "Rest v1 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X GET http://localhost:3000/account\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .get(\"http://localhost:3000/account\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/account\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "Retrieve information for the account associated with the request.\r\nFor now, it only echoes the subaccount if one was specified in the header,\r\nwhich can be used to verify that one is operating on the intended account.\r\nMore fields will be added later.",
+                "operationId": "Account",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/Getaddresses": {
+            "get": {
+                "tags": [
+                    "Rest v1 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X GET http://localhost:3000/addresses\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .get(\"http://localhost:3000/addresses\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/addresses\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "List deposit addresses that have been requested or provisioned.",
+                "operationId": "List Addresses ",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            },
+            "post": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X POST http://localhost:3000/addresses\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .post(\"http://localhost:3000/addresses\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/addresses\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "Request provisioning of a deposit address for a currency for which no address has been requested or provisioned.",
+                "operationId": "Create Addresses ",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "newAddress",
+                        "in": "body",
+                        "description": "information including ID of the currency to provision a deposit address for",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewAddress"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/Getdeposits/closed": {
+            "get": {
+                "tags": [
+                    "Rest v1 API"
+                ],
+                "description": "List closed deposits. StartDate and EndDate filters apply to the CompletedAt field.\r\nPagination and the sort order of the results are in inverse order of the CompletedAt field.",
+                "operationId": "Closed Deposits",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "filter by deposit status (optional)",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "COMPLETED",
+                            "ORPHANED",
+                            "INVALIDATED"
+                        ]
+                    },
+                    {
+                        "name": "currencySymbol",
+                        "in": "query",
+                        "description": "filter by currency (optional)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "nextPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should start after, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the forward direction.\r\n(Optional. May only be specified if PreviousPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "previousPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should end before, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the reverse direction.\r\n(Optional. May only be specified if NextPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "maximum number of items to retrieve -- default 100, minimum 1, maximum 200 (optional)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "(optional) Filters out results before this timestamp. In ISO 8601 format (e.g., \"2019-01-02T16:23:45Z\").\r\nPrecision beyond one second is not supported. Use pagination parameters for more precise filtering.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "(optional) Filters out result after this timestamp.  Uses the same format as StartDate.\r\nEither, both, or neither of StartDate and EndDate can be set.  The only constraint on the pair is that, \r\nif both are set, then EndDate cannot be before StartDate.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/Getwithdrawals/closed": {
+            "get": {
+                "tags": [
+                    "Rest v1 API"
+                ],
+                "description": "List closed withdrawals.  StartDate and EndDate filters apply to the CompletedAt field.\r\nPagination and the sort order of the results are in inverse order of the CompletedAt field.",
+                "operationId": "Closed Withdrawals",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "filter by withdrawal status (optional)",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "COMPLETED",
+                            "CANCELLED"
+                        ]
+                    },
+                    {
+                        "name": "currencySymbol",
+                        "in": "query",
+                        "description": "filter by currency (optional)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "nextPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should start after, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the forward direction.\r\n(Optional. May only be specified if PreviousPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "previousPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should end before, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the reverse direction.\r\n(Optional. May only be specified if NextPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "maximum number of items to retrieve -- default 100, minimum 1, maximum 200 (optional)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "(optional) Filters out results before this timestamp. In ISO 8601 format (e.g., \"2019-01-02T16:23:45Z\").\r\nPrecision beyond one second is not supported. Use pagination parameters for more precise filtering.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "(optional) Filters out result after this timestamp.  Uses the same format as StartDate.\r\nEither, both, or neither of StartDate and EndDate can be set.  The only constraint on the pair is that, \r\nif both are set, then EndDate cannot be before StartDate.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/account": {
+            "get": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X GET http://localhost:3000/account\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .get(\"http://localhost:3000/account\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/account\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "Retrieve information for the account associated with the request.\r\nFor now, it only echoes the subaccount if one was specified in the header,\r\nwhich can be used to verify that one is operating on the intended account.\r\nMore fields will be added later.",
+                "operationId": "Account",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/addresses": {
+            "get": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X GET http://localhost:3000/addresses\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .get(\"http://localhost:3000/addresses\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/addresses\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "List deposit addresses that have been requested or provisioned.",
+                "operationId": "List Addresses ",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            },
+            "post": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "x-code-samples": [
+                    {
+                        "lang": "shell",
+                        "source": "curl -X POST http://localhost:3000/addresses\n"
+                    },
+                    {
+                        "lang": "JavaScript",
+                        "source": "// npm i got\nrequire(\"got\")\n  .post(\"http://localhost:3000/addresses\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
+                    },
+                    {
+                        "lang": "Python",
+                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/addresses\"\nprint(urllib.request.urlopen(url).read())\n"
+                    }
+                ],
+                "description": "Request provisioning of a deposit address for a currency for which no address has been requested or provisioned.",
+                "operationId": "Create Addresses ",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "newAddress",
+                        "in": "body",
+                        "description": "information including ID of the currency to provision a deposit address for",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NewAddress"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/deposits/closed": {
+            "get": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "description": "List closed deposits. StartDate and EndDate filters apply to the CompletedAt field.\r\nPagination and the sort order of the results are in inverse order of the CompletedAt field.",
+                "operationId": "Closed Deposits",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "filter by deposit status (optional)",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "COMPLETED",
+                            "ORPHANED",
+                            "INVALIDATED"
+                        ]
+                    },
+                    {
+                        "name": "currencySymbol",
+                        "in": "query",
+                        "description": "filter by currency (optional)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "nextPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should start after, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the forward direction.\r\n(Optional. May only be specified if PreviousPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "previousPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should end before, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the reverse direction.\r\n(Optional. May only be specified if NextPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "maximum number of items to retrieve -- default 100, minimum 1, maximum 200 (optional)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "(optional) Filters out results before this timestamp. In ISO 8601 format (e.g., \"2019-01-02T16:23:45Z\").\r\nPrecision beyond one second is not supported. Use pagination parameters for more precise filtering.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "(optional) Filters out result after this timestamp.  Uses the same format as StartDate.\r\nEither, both, or neither of StartDate and EndDate can be set.  The only constraint on the pair is that, \r\nif both are set, then EndDate cannot be before StartDate.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/withdrawals/closed": {
+            "get": {
+                "tags": [
+                    "Rest v3 API"
+                ],
+                "description": "List closed withdrawals.  StartDate and EndDate filters apply to the CompletedAt field.\r\nPagination and the sort order of the results are in inverse order of the CompletedAt field.",
+                "operationId": "Closed Withdrawals",
+                "consumes": [],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "filter by withdrawal status (optional)",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "COMPLETED",
+                            "CANCELLED"
+                        ]
+                    },
+                    {
+                        "name": "currencySymbol",
+                        "in": "query",
+                        "description": "filter by currency (optional)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "nextPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should start after, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the forward direction.\r\n(Optional. May only be specified if PreviousPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "previousPageToken",
+                        "in": "query",
+                        "description": "The unique identifier of the item that the resulting query result should end before, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the reverse direction.\r\n(Optional. May only be specified if NextPageToken is not specified.)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "pageSize",
+                        "in": "query",
+                        "description": "maximum number of items to retrieve -- default 100, minimum 1, maximum 200 (optional)",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "description": "(optional) Filters out results before this timestamp. In ISO 8601 format (e.g., \"2019-01-02T16:23:45Z\").\r\nPrecision beyond one second is not supported. Use pagination parameters for more precise filtering.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "description": "(optional) Filters out result after this timestamp.  Uses the same format as StartDate.\r\nEither, both, or neither of StartDate and EndDate can be set.  The only constraint on the pair is that, \r\nif both are set, then EndDate cannot be before StartDate.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Account"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus401"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus403"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus429"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/HttpStatus500"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-btx-authenticated": true
+            }
+        },
+        "/Python": {
+            "get": {
+                "tags": [
+                    "Bittrex SDK"
+                ],
+                "servers": [
+                    {
+                        "url": "https://api.bittrex.com/api/v3"
+                    }
+                ],
+                "description": "Python Library"
+            }
+        },
+        "/NodeJS": {
+            "tags": [
+                "Bittrex SDK"
+            ],
+            "servers": [
+                {
+                    "url": "https://api.bittrex.com/api/v3"
+                }
+            ],
+            "description": "Nodejs Library"
+        }
+    },
+    "definitions": {
+        "HttpStatus400": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code generated or 400 if default.",
+                    "example": 400,
+                    "default": 400
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "invalid param value for field id"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "HttpStatus401": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code generated or 401 if default.",
+                    "example": 401,
+                    "default": 401
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "unauthorized (authentication)"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "HttpStatus403": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code generated or 403 if default.",
+                    "example": 403,
+                    "default": 403
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "forbidden (authorization)"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "HttpStatus404": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code generated or 404 if default.",
+                    "example": 404,
+                    "default": 404
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "not found"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "HttpStatus429": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code generated or 429 if default.",
+                    "example": 429,
+                    "default": 429
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "rate limited"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "HttpStatus500": {
+            "type": "object",
+            "properties": {
+                "timestamp": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Current ISO 8601 timestamp on the server.",
+                    "example": "2018-06-02 22:51:28 UTC"
+                },
+                "error_code": {
+                    "type": "integer",
+                    "description": "Internal error code matches HTTP Status code of 500.",
+                    "example": 500,
+                    "default": 500
+                },
+                "error_message": {
+                    "type": "string",
+                    "description": "a corresponding error message for the code",
+                    "example": "An internal server error occurred"
+                },
+                "elapsed": {
+                    "type": "integer",
+                    "description": "Number of milliseconds taken to generate this response",
+                    "example": 10
+                }
+            }
+        },
+        "Account": {
+            "type": "object",
+            "properties": {
+                "subaccountId": {
+                    "format": "uuid",
+                    "description": "the subaccount ID associated with this request if one was specified in the header (optional)",
+                    "type": "string",
+                    "example": "00000000-0000-0000-0000-000000000000"
+                }
+            }
+        },
+        "Address": {
+            "required": [
+                "status",
+                "currencySymbol"
+            ],
+            "type": "object",
+            "properties": {
+                "status": {
+                    "description": "the status of this deposit address",
+                    "enum": [
+                        "REQUESTED",
+                        "PROVISIONED"
+                    ],
+                    "type": "string"
+                },
+                "currencySymbol": {
+                    "description": "the unique ID of the currency this deposit address is for",
+                    "type": "string"
+                },
+                "cryptoAddress": {
+                    "description": "the cryptographic deposit address (optional, only set if Status is PROVISIONED)",
+                    "type": "string"
+                },
+                "cryptoAddressTag": {
+                    "description": "the cryptographic deposit address tag (optional, only set if Status is PROVISIONED)\r\nNOTE: This only applies for currencies whose coinType requires it.",
+                    "type": "string"
+                }
+            }
+        },
+        "NewAddress": {
+            "required": [
+                "currencySymbol"
+            ],
+            "type": "object",
+            "properties": {
+                "currencySymbol": {
+                    "description": "the currency ID to provision a new address for",
+                    "type": "string"
+                }
+            }
+        },
+        "Deposit": {
+            "required": [
+                "id",
+                "currencySymbol",
+                "quantity",
+                "cryptoAddress",
+                "confirmations",
+                "updatedAt",
+                "status"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "uuid",
+                    "description": "unique ID for this deposit, assigned by the service",
+                    "type": "string",
+                    "example": "00000000-0000-0000-0000-000000000000"
+                },
+                "currencySymbol": {
+                    "description": "unique symbol of the currency being deposited to",
+                    "type": "string"
+                },
+                "quantity": {
+                    "format": "double",
+                    "description": "quantity to deposit",
+                    "type": "number"
+                },
+                "cryptoAddress": {
+                    "description": "crypto address for this deposit",
+                    "type": "string"
+                },
+                "cryptoAddressTag": {
+                    "description": "crypto address tag for this deposit (optional, depends on the coin type of currency being deposited)",
+                    "type": "string"
+                },
+                "txId": {
+                    "description": "TxID for the deposit (optional)",
+                    "type": "string"
+                },
+                "confirmations": {
+                    "format": "int32",
+                    "description": "current count of confirmations",
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "format": "date-time",
+                    "description": "time stamp when this deposit was last updated",
+                    "type": "string"
+                },
+                "completedAt": {
+                    "format": "date-time",
+                    "description": "time stamp when this deposit was completed (optional, only set when status is COMPLETED)",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "current status of this deposit",
+                    "enum": [
+                        "PENDING",
+                        "COMPLETED",
+                        "ORPHANED",
+                        "INVALIDATED"
+                    ],
+                    "type": "string"
+                }
+            }
+        },
+        "PaginationParameters": {
+            "type": "object",
+            "properties": {
+                "nextPageToken": {
+                    "description": "The unique identifier of the item that the resulting query result should start after, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the forward direction.\r\n(Optional. May only be specified if PreviousPageToken is not specified.)",
+                    "type": "string"
+                },
+                "previousPageToken": {
+                    "description": "The unique identifier of the item that the resulting query result should end before, in the sort order of the given endpoint.\r\nUsed for traversing a paginated set in the reverse direction.\r\n(Optional. May only be specified if NextPageToken is not specified.)",
+                    "type": "string"
+                },
+                "pageSize": {
+                    "format": "int32",
+                    "description": "maximum number of items to retrieve -- default 100, minimum 1, maximum 200 (optional)",
+                    "type": "integer"
+                }
+            }
+        },
+        "DateFilter": {
+            "type": "object",
+            "properties": {
+                "startDate": {
+                    "format": "date-time",
+                    "description": "(optional) Filters out results before this timestamp. In ISO 8601 format (e.g., \"2019-01-02T16:23:45Z\").\r\nPrecision beyond one second is not supported. Use pagination parameters for more precise filtering.",
+                    "type": "string"
+                },
+                "endDate": {
+                    "format": "date-time",
+                    "description": "(optional) Filters out result after this timestamp.  Uses the same format as StartDate.\r\nEither, both, or neither of StartDate and EndDate can be set.  The only constraint on the pair is that, \r\nif both are set, then EndDate cannot be before StartDate.",
+                    "type": "string"
+                }
+            }
+        },
+        "ServicePing": {
+            "required": [
+                "serverTime"
+            ],
+            "type": "object",
+            "properties": {
+                "serverTime": {
+                    "format": "int64",
+                    "description": "Server time in epoch millisecond format, rounded down to the nearest second.\r\nThe same format must be used in the Api-Timestamp header of authenticated requests.",
+                    "type": "integer"
+                }
+            }
+        },
+        "Withdrawal": {
+            "required": [
+                "id",
+                "currencySymbol",
+                "quantity",
+                "cryptoAddress",
+                "status",
+                "createdAt"
+            ],
+            "type": "object",
+            "properties": {
+                "id": {
+                    "format": "uuid",
+                    "description": "unique ID for this withdrawal, assigned by the service (always present)",
+                    "type": "string",
+                    "example": "00000000-0000-0000-0000-000000000000"
+                },
+                "currencySymbol": {
+                    "description": "unique symbol of currency to withdraw (always present, matches the field in NewWithdrawal)",
+                    "type": "string"
+                },
+                "quantity": {
+                    "format": "double",
+                    "description": "quantity to withdraw (always present, matches the field in NewWithdrawal)",
+                    "type": "number"
+                },
+                "cryptoAddress": {
+                    "description": "crypto address for this withdrawal (always present, matches the field in NewWithdrawal)",
+                    "type": "string"
+                },
+                "cryptoAddressTag": {
+                    "description": "custom message further specifying how to complete the withdrawal (optional, matches the field in NewWithdrawal)",
+                    "type": "string"
+                },
+                "txCost": {
+                    "format": "double",
+                    "description": "TxCost of this withdrawal (always present)",
+                    "type": "number"
+                },
+                "txId": {
+                    "description": "TxID associated with this withdrawal (optional)",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "current status of this withdrawal (always present)",
+                    "enum": [
+                        "REQUESTED",
+                        "AUTHORIZED",
+                        "PENDING",
+                        "COMPLETED",
+                        "ERROR_INVALID_ADDRESS",
+                        "CANCELLED"
+                    ],
+                    "type": "string"
+                },
+                "createdAt": {
+                    "format": "date-time",
+                    "description": "time stamp when this withdrawal was initiated (always present)",
+                    "type": "string"
+                },
+                "completedAt": {
+                    "format": "date-time",
+                    "description": "time stamp when this withdrawal was completed (optional)",
+                    "type": "string"
+                }
+            }
+        },
+        "NewWithdrawal": {
+            "required": [
+                "currencySymbol",
+                "quantity",
+                "cryptoAddress"
+            ],
+            "type": "object",
+            "properties": {
+                "currencySymbol": {
+                    "description": "unique symbol of the currency to withdraw from",
+                    "type": "string"
+                },
+                "quantity": {
+                    "format": "double",
+                    "description": "quantity to withdraw",
+                    "type": "number"
+                },
+                "cryptoAddress": {
+                    "description": "crypto address to withdraw funds to",
+                    "type": "string"
+                },
+                "cryptoAddressTag": {
+                    "description": "custom message further specifying how to complete the withdrawal\r\n(optional, depends on whether the cryptoAddress is sufficient for this currency)",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

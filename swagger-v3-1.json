@@ -10,16 +10,8 @@
     },
     "tags": [
         {
-            "name": "Rest v1 API",
-            "description": "an API to subscribe to different URLs for different events (as opposed to issuing RPCs)"
-        },
-        {
             "name": "Rest v3 API",
             "description": "an API to subscribe to different URLs for different events (as opposed to issuing RPCs)"
-        },
-        {
-            "name": "Bittrex SDK",
-            "description": "Various set of client libraries supported by Bittrex"
         }
     ],
     "servers": [

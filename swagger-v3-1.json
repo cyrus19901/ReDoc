@@ -30,101 +30,6 @@
         "https"
     ],
     "paths": {
-        "/Getaccount": {
-            "get": {
-                "tags": [
-                    "Rest v1 API"
-                ],
-                "servers": [
-                    {
-                        "url": "https://api.bittrex.com/api/v3"
-                    }
-                ],
-                "x-code-samples": [
-                    {
-                        "lang": "shell",
-                        "source": "curl -X GET http://localhost:3000/account\n"
-                    },
-                    {
-                        "lang": "JavaScript",
-                        "source": "// npm i got\nrequire(\"got\")\n  .get(\"http://localhost:3000/account\")\n  .then(response => {\n    console.log(response.body);\n  });\n"
-                    },
-                    {
-                        "lang": "Python",
-                        "source": "from Bittrex.bittrex import request\nurl = \"http://localhost:3000/account\"\nprint(urllib.request.urlopen(url).read())\n"
-                    }
-                ],
-                "description": "Retrieve information for the account associated with the request.\r\nFor now, it only echoes the subaccount if one was specified in the header,\r\nwhich can be used to verify that one is operating on the intended account.\r\nMore fields will be added later.",
-                "operationId": "Account",
-                "consumes": [],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/Account"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/Account"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/HttpStatus401"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/HttpStatus403"
-                                }
-                            }
-                        }
-                    },
-                    "429": {
-                        "description": "Too Many Requests",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/HttpStatus429"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/definitions/HttpStatus500"
-                                }
-                            }
-                        }
-                    }
-                },
-                "x-btx-authenticated": true
-            }
-        },
         "/account": {
             "get": {
                 "tags": [
@@ -689,7 +594,7 @@
                 },
                 "x-btx-authenticated": true
             }
-        },
+        }
     },
     "definitions": {
         "HttpStatus400": {
